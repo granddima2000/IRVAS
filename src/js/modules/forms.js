@@ -1,6 +1,12 @@
-const forms = () => {
+import checkNumInputs from "./checkNumInputs";
+
+const forms = (state) => {
     const form = document.querySelectorAll('form'),
-          inputs = document.querySelectorAll('input');
+          inputs = document.querySelectorAll('input'),
+          modal = document.querySelector('.popup_calc_end');
+
+    checkNumInputs('input[name="user_phone"]');
+
     // Оповещаем пользователя
     const message = { 
         loading: 'Загрузка...',
@@ -33,6 +39,12 @@ const forms = () => {
             item.appendChild(statusMessage); // Помещаем блок в конец нашей формы
 
             const formData = new FormData(item); // Собираем все данные из введеной формы
+            if (item.getAttribute('data-calc') === "end") {
+                for (let key in state) {
+                    console.log(key, state);
+                    formData.append(key, state[key]);
+                }
+            }
 
             postData('assets/server.php', formData) // отправляем запрос на сервер
             .then(res => {
@@ -44,7 +56,9 @@ const forms = () => {
             })
             .finally(() => {
                 clearInputs();
+                Object.keys(state).forEach(key => delete state[key]);
                 setTimeout(() => {
+                    modal.style.display = 'none'
                     statusMessage.remove();
                 }, 3000);
             });
