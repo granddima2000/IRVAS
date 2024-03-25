@@ -14,6 +14,7 @@ const forms = (state) => {
         failure: 'Что-то пошло не так' 
     };
 
+    //переменная с функцией, которая будет отвечать за отправку данных на сервер
     const postData = async (url, data) => { // data - данные уходящие на сервер
         document.querySelector('.status').textContent = message.loading;
         let res = await fetch(url, {
@@ -39,10 +40,10 @@ const forms = (state) => {
             item.appendChild(statusMessage); // Помещаем блок в конец нашей формы
 
             const formData = new FormData(item); // Собираем все данные из введеной формы
+            // FormData это объект, ктр соберет все содержание в инпутах и поместить в перемен formData
             if (item.getAttribute('data-calc') === "end") {
-                for (let key in state) {
-                    console.log(key, state);
-                    formData.append(key, state[key]);
+                for (let key in state) { // тогда берем данные из state перебираем и 
+                    formData.append(key, state[key]); // отправляем в formData с помощью append
                 }
             }
 
